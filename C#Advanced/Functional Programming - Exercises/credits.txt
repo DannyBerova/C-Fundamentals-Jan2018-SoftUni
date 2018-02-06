@@ -1,0 +1,3 @@
+Credits to Melik Pehlivanov
+
+https://github.com/melikpehlivanov/CSharp-Advanced-January-2018/tree/master/Functional%20Programming%20-%20Exercises
