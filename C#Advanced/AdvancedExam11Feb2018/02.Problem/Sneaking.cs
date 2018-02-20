@@ -13,111 +13,99 @@ namespace _02.Problem
             var colOfSam = 0;
             var rowOfNikoladze = 0;
             var colOfNikoladze = 0;
-            bool isSamDead = false;
-            bool isNikoladzeDead = false;
 
             for (int rowMtr = 0; rowMtr < n; rowMtr++)
             {
                 var currentInput = Console.ReadLine().ToCharArray();
                 matrix[rowMtr] = currentInput;
-                for (int colMtr = 0; colMtr < matrix[rowMtr].Length; colMtr++)
-                {
-                    if (matrix[rowMtr][colMtr] == 'S')
-                    {
-                        rowOfSam = rowMtr;
-                        colOfSam = colMtr;
-                    }
-                    if (matrix[rowMtr][colMtr] == 'N')
-                    {
-                        rowOfNikoladze = rowMtr;
-                        colOfNikoladze = colMtr;
-                    }
-                }
+                GetSamAndNikoladzePosition(matrix, ref rowOfSam, ref colOfSam, ref rowOfNikoladze, ref colOfNikoladze, rowMtr);
             }
             var commands = Console.ReadLine().ToCharArray();
             var positionOfSam = new int[] { rowOfSam, colOfSam };
 
-            while (!isNikoladzeDead && !isSamDead)
+            for (int i = 0; i < commands.Length; i++)
             {
-                for (int i = 0; i < commands.Length; i++)
+                EnemiesMove(matrix);
+
+                var command = commands[i];
+                var current = matrix[positionOfSam[0]].ToList();
+
+                if (current.Contains('b'))
                 {
-                    EnemiesMove(matrix);
-
-                    var command = commands[i];
-                    var current = matrix[positionOfSam[0]].ToArray();
-
-                    if (current.Contains('b'))
+                    if (current.IndexOf('b') < current.IndexOf('S'))
                     {
-                        var currentRow = string.Join("", matrix[positionOfSam[0]].ToArray());
-                        if (currentRow.IndexOf('b') < currentRow.IndexOf('S'))
-                        {
-                            isSamDead = true;
-                            matrix[positionOfSam[0]][positionOfSam[1]] = 'X';
-                            break;
-                        }
-                    }
-                    if (current.Contains('d'))
-                    {
-                        var currentRow = string.Join("", matrix[positionOfSam[0]].ToArray());
-                        if (currentRow.IndexOf('d') > currentRow.IndexOf('S'))
-                        {
-                            isSamDead = true;
-                            matrix[positionOfSam[0]][positionOfSam[1]] = 'X';
-                            break;
-                        }
-                    }
-                    positionOfSam = SamMoves(matrix, positionOfSam, command);
-
-                    if (positionOfSam[0] == rowOfNikoladze)
-                    {
-                        isNikoladzeDead = true;
-                        matrix[rowOfNikoladze][colOfNikoladze] = 'X';
-                        break;
-                    }
-
-                    if (isSamDead)
-                    {
+                        CheckIsSamDead(matrix, positionOfSam);
                         break;
                     }
                 }
-            }
 
-            if (isSamDead)
-            {
-                Console.WriteLine($"Sam died at {positionOfSam[0]}, {positionOfSam[1]}");
-            }
-            if (isNikoladzeDead)
-            {
-                Console.WriteLine("Nikoladze killed!");
+                if (current.Contains('d'))
+                {
+                    if (current.IndexOf('d') > current.IndexOf('S'))
+                    {
+                        CheckIsSamDead(matrix, positionOfSam);
+                        break;
+                    }
+                }
+                positionOfSam = SamMoves(matrix, positionOfSam, command);
+
+                if (positionOfSam[0] == rowOfNikoladze)
+                {
+                    matrix[rowOfNikoladze][colOfNikoladze] = 'X';
+                    Console.WriteLine("Nikoladze killed!");
+                    break;
+                }
             }
 
             PrintMatrix(matrix);
+        }
+
+        private static void GetSamAndNikoladzePosition(char[][] matrix, ref int rowOfSam, ref int colOfSam, ref int rowOfNikoladze, ref int colOfNikoladze, int rowMtr)
+        {
+            for (int colMtr = 0; colMtr < matrix[rowMtr].Length; colMtr++)
+            {
+                if (matrix[rowMtr][colMtr] == 'S')
+                {
+                    rowOfSam = rowMtr;
+                    colOfSam = colMtr;
+                }
+                if (matrix[rowMtr][colMtr] == 'N')
+                {
+                    rowOfNikoladze = rowMtr;
+                    colOfNikoladze = colMtr;
+                }
+            }
+        }
+
+        private static void CheckIsSamDead(char[][] matrix, int[] positionOfSam)
+        {
+            matrix[positionOfSam[0]][positionOfSam[1]] = 'X';
+            Console.WriteLine($"Sam died at {positionOfSam[0]}, {positionOfSam[1]}");
         }
 
         private static void EnemiesMove(char[][] matrix)
         {
             for (int i = 0; i < matrix.Length; i++)
             {
-                var currentRowToStr =string.Join("", matrix[i].ToArray());
                 var currentRow = matrix[i].ToArray();
 
-                if (currentRowToStr.Contains('b'))
+                if (currentRow.Contains('b'))
                 {
-                    var bIndex = currentRowToStr.IndexOf('b');
-                    if (bIndex < currentRowToStr.Length - 1)
+                    var bIndex = Array.IndexOf(currentRow, 'b');
+                    if (bIndex < currentRow.Length - 1)
                     {
                         matrix[i][bIndex + 1] = 'b';
                         matrix[i][bIndex] = '.';
                     }
-                    if (bIndex == currentRowToStr.Length - 1)
+                    if (bIndex == currentRow.Length - 1)
                     {
                         matrix[i][bIndex] = 'd';
                     }
 
                 }
-                if (currentRowToStr.Contains('d'))
+                if (currentRow.Contains('d'))
                 {
-                    var dIndex = currentRowToStr.IndexOf('d');
+                    var dIndex = Array.IndexOf(currentRow, 'd');
                     if (dIndex >= 1)
                     {
                         matrix[i][dIndex - 1] = 'd';
@@ -127,7 +115,6 @@ namespace _02.Problem
                     {
                         matrix[i][dIndex] = 'b';
                     }
-
                 }
             }
         }
