@@ -63,8 +63,12 @@ public class NetworkManager
         if (Network.HardwareComponents.ContainsKey(hardwareName))
         {
             var searchedHardware = Network.HardwareComponents[hardwareName];
-            if (searchedHardware.MaxCapacity >= software.CapacityConsumption
-                && searchedHardware.MaxMemory >= software.MemoryConsumption)
+
+            var freeCapacity = searchedHardware.MaxCapacity - searchedHardware.CapacityTaken();
+            var freeMemory = searchedHardware.MaxMemory - searchedHardware.OperationalMemoryInUse();
+
+            if (freeCapacity >= software.CapacityConsumption
+                && freeMemory >= software.MemoryConsumption)
             {
                 searchedHardware.Softwares.Add(software);
             }
