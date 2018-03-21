@@ -1,0 +1,94 @@
+Notes Exam 18MAr2018
+
+JoinParty {Java/CSharp} {class} {name}
+AddItemToPool {itemName}
+PickUpItem {characterName}
+UseItem {characterName} {itemName}
+UseItemOn {giverName} {receiverName} {itemName}
+GiveCharacterItem {giverName} {receiverName} {itemName}
+GetStats
+Attack {attackerName} {attackTargetName}
+Heal {healerName} {healingTargetName}
+EndTurn
+IsGameOver
+
+
+“Parameter Error: ” plus the message of the exception if it’s an ArgumentException
+“Invalid Operation: ” plus the message of the exception if it’s an InvalidOperationException
+
+
+JoinParty CSharp Warrior Gosho
+JoinParty Java Warrior Pesho
+AddItemToPool HealthPotion
+AddItemToPool ArmorRepairKit
+AddItemToPool PoisonPotion
+PickUpItem Gosho
+
+JoinParty CSharp Warrior Gosho
+JoinParty CSharp Warrior Pesho
+AddItemToPool HealthPotion
+AddItemToPool PoisonPotion
+PickUpItem Pesho
+PickUpItem Gosho
+PickUpItem Pesho
+UseItem Pesho HealthPotion
+UseItem Pesho PoisonPotion
+UseItemOn Gosho Pesho HealthPotion
+AddItemToPool PoisonPotion
+PickUpItem Gosho
+GiveCharacterItem Gosho Pesho PoisonPotion
+JoinParty Java Warrior Ivan
+Attack Ivan Gosho
+Attack Ivan Gosho
+Attack Ivan Gosho
+Attack Gosho Ivan
+Attack Ivan Gosho
+EndTurn
+Attack Ivan Pesho
+Attack Ivan Pesho
+Attack Ivan Pesho
+Attack Ivan Pesho
+EndTurn
+EndTurn
+
+JoinParty Java Warrior Gosho
+JoinParty CSharp Warrior Ivan
+Attack Gosho Gosho
+PickUpItem Gosho
+AddItemToPool InvalidItem
+AddItemToPool HealthPotion
+UseItem Gosho InvalidItem
+UseItem Gosho HealthPotion
+PickUpItem InvalidCharacter
+Attack Ivan Ivan
+Attack Pesho Ivan
+Attack Ivan Pesho
+Attack A B
+Attack Ivan Gosho
+Attack Ivan Gosho
+Attack Ivan Gosho
+Attack Ivan Gosho
+EndTurn
+EndTurn
+
+JoinParty CSharp Warrior Gosho
+JoinParty Java Warrior Pesho
+AddItemToPool HealthPotion
+AddItemToPool ArmorRepairKit
+AddItemToPool PoisonPotion
+PickUpItem Gosho
+EndTurn
+JoinParty Java Cleric Ivan
+Attack Gosho Pesho
+Attack Gosho Pesho
+EndTurn
+Attack Gosho Pesho
+Heal Ivan Pesho
+EndTurn
+Attack Gosho Ivan
+Attack Gosho Ivan
+Attack Gosho Pesho
+Attack Gosho Pesho
+Attack Gosho Pesho
+EndTurn
+EndTurn
