@@ -1,32 +1,32 @@
 ﻿namespace _07.InfernoInfinity.Core.Commands
 {
-    using System;
-    using Microsoft.Extensions.DependencyInjection;
     using _07.InfernoInfinity.Contracts;
+    using _07.InfernoInfinity.Core.Attributes;
 
     class PrintCommand : Command
     {
-        private readonly IServiceProvider serviceProvider;
+        [Inject]
+        private IRepository repository;
 
-        public PrintCommand(IServiceProvider serviceProvider, string[] data) 
-            : base(serviceProvider, data)
+        public PrintCommand(string[] data, IRepository repository) 
+            : base(data)
         {
-            this.serviceProvider = serviceProvider;
+            this.Repository = repository;
+        }
+
+        public IRepository Repository
+        {
+            get => this.repository;
+            private set => this.repository = value;
         }
 
         public override string Execute()
         {
-            var repo = serviceProvider.GetService<IRepository>();
+            var weaponName = this.Data[1];
+            var weapon = this.Repository.GetWeapon(weaponName);
 
-            IWeapon weapon = GetWeaponToPrint(repo);
             return weapon.ToString();
         }
 
-        private IWeapon GetWeaponToPrint(IRepository repo)
-        {
-            var weaponName = this.Data[1];
-            var weapon = repo.GetWeapon(weaponName);
-            return weapon;
-        }
     }
 }

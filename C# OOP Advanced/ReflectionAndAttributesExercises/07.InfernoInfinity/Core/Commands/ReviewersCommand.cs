@@ -1,16 +1,13 @@
 ﻿namespace _07.InfernoInfinity.Core.Commands
 {
     using _07.InfernoInfinity.Models.Weapons;
-    using System;
     using System.Linq;
 
     class ReviewersCommand : Command
     {
-        private readonly IServiceProvider serviceProvider;
 
-        public ReviewersCommand(IServiceProvider serviceProvider, string[] data) : base(serviceProvider, data)
+        public ReviewersCommand(string[] data) : base(data)
         {
-            this.serviceProvider = serviceProvider;
         }
 
         public override string Execute()

@@ -14,7 +14,11 @@ namespace _07.InfernoInfinity
         {
             IServiceProvider serviceProvider = ConfigureSurvices();
 
-            IRunnable engine = new Engine( serviceProvider);
+            ICommandInterpreter commandInterpreter = new CommandInterpreter(serviceProvider);
+            IReader reader = new Reader();
+            IWriter writer = new Writer();
+
+            IRunnable engine = new Engine(commandInterpreter, reader, writer);
             engine.Run();
         }
 
@@ -25,8 +29,6 @@ namespace _07.InfernoInfinity
             services.AddTransient<IWeaponFactory, WeaponFactory>();
             services.AddTransient<IGemFactory, GemFactory>();
             services.AddTransient<ICommandInterpreter, CommandInterpreter>();
-            services.AddTransient<IReader, Reader>();
-            services.AddTransient<IWriter, Writer>();
             services.AddSingleton<IRepository, Repository>();
 
             IServiceProvider serviceProvider = services.BuildServiceProvider();

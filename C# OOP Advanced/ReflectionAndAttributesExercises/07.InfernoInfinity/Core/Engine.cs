@@ -9,18 +9,19 @@ namespace _07.InfernoInfinity.Core
 
     public class Engine : IRunnable
     {
-        private readonly IServiceProvider serviceProvider;
+        private readonly ICommandInterpreter commandInterpreter;
+        private IReader reader;
+        private IWriter writer;
 
-        public Engine( IServiceProvider serviceProvider)
+        public Engine( ICommandInterpreter commandInterpreter, IReader reader, IWriter writer)
         {
-            this.serviceProvider = serviceProvider;
+            this.commandInterpreter = commandInterpreter;
+            this.reader = reader;
+            this.writer = writer;
         }
 
         public void Run()
         {
-            var interpreter = serviceProvider.GetService<ICommandInterpreter>();
-            var reader = serviceProvider.GetService<IReader>();
-            var writer = serviceProvider.GetService<IWriter>();
 
             while (true)
             {
@@ -32,7 +33,7 @@ namespace _07.InfernoInfinity.Core
                 }
                 string[] data = input.Split(';');
                 string commandName = data[0];
-                IExecutable command = interpreter.InterpretCommand(data, commandName);
+                IExecutable command = this.commandInterpreter.InterpretCommand(data, commandName);
 
                 var method = typeof(IExecutable).GetMethods().First();
 

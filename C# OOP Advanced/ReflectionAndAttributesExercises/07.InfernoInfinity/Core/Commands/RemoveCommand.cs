@@ -1,32 +1,32 @@
 ﻿namespace _07.InfernoInfinity.Core.Commands
 {
-    using System;
-    using Microsoft.Extensions.DependencyInjection;
     using _07.InfernoInfinity.Contracts;
+    using _07.InfernoInfinity.Core.Attributes;
 
     class RemoveCommand : Command
     {
-        private readonly IServiceProvider serviceProvider;
+        [Inject]
+        private IRepository repository;
 
-        public RemoveCommand(IServiceProvider serviceProvider, string[] data) 
-            : base(serviceProvider, data)
+        public RemoveCommand(string[] data, IRepository repository) 
+            : base(data)
         {
-            this.serviceProvider = serviceProvider;
+            this.Repository = repository;
+        }
+
+        protected IRepository Repository
+        {
+            get => repository;
+            private set => repository = value;
         }
 
         public override string Execute()
         {
-            var repo = serviceProvider.GetService<IRepository>();
-            RemoveGemFromWeapon(repo);
-            return string.Empty;
-        }
-
-        private void RemoveGemFromWeapon(IRepository repo)
-        {
             var weaponName = this.Data[1];
             var index = int.Parse(this.Data[2]);
-            var weapon = repo.GetWeapon(weaponName);
+            var weapon = this.Repository.GetWeapon(weaponName);
             weapon.RemoveGem(index);
+            return string.Empty;
         }
     }
 }

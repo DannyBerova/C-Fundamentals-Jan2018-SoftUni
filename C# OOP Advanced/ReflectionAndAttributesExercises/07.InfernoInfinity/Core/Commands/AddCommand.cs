@@ -1,38 +1,48 @@
-﻿using _07.InfernoInfinity.Contracts;
-using System;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-
-namespace _07.InfernoInfinity.Core.Commands
+﻿namespace _07.InfernoInfinity.Core.Commands
 {
-   public class AddCommand : Command
+    using System.Linq;
+    using _07.InfernoInfinity.Contracts;
+    using _07.InfernoInfinity.Core.Attributes;
+
+    public class AddCommand : Command
     {
-        private readonly IServiceProvider serviceProvider;
+        [Inject]
+        private IGemFactory gemFactory;
+        [Inject]
+        private IRepository repository;
 
-
-        public AddCommand(IServiceProvider serviceProvider, string[] data) 
-            : base(serviceProvider, data)
+        public AddCommand(string[] data, IGemFactory gemFactory, IRepository repository)
+            : base(data)
         {
-            this.serviceProvider = serviceProvider;
+            this.GemFactory = gemFactory;
+            this.Repository = repository;
+        }
+
+        protected IRepository Repository
+        {
+            get => repository;
+            private set => repository = value;
+        }
+
+        protected IGemFactory GemFactory
+        {
+            get => gemFactory;
+            private set => gemFactory = value;
         }
 
         public override string Execute()
         {
-            var gemFactory = serviceProvider.GetService<IGemFactory>();
-            var repo = serviceProvider.GetService<IRepository>();
-            AddNewGem(gemFactory, repo);
-            return string.Empty;
-        }
-
-        private void AddNewGem(IGemFactory gemFactory, IRepository repo)
-        {
             string nameOfWeapon = this.Data[1];
             int index = int.Parse(this.Data[2]);
+
             string claryty = this.Data[3].Split().First();
             string gemType = this.Data[3].Split().Last();
-            IGem gemToAdd = gemFactory.Create(gemType, claryty);
-            var weapon = repo.GetWeapon(nameOfWeapon);
+            IGem gemToAdd = this.GemFactory.Create(gemType, claryty);
+
+            var weapon = this.Repository.GetWeapon(nameOfWeapon);
             weapon.AddGem(index, gemToAdd);
+
+            return string.Empty;
         }
     }
 }

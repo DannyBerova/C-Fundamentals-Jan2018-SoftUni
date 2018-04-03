@@ -12,6 +12,7 @@
             this.Description = description;
             this.Reviewers = new List<string>(reviewers);
         }
+
         public string Author { get; private set; }
 
         public string Description { get; private set; }
@@ -24,7 +25,8 @@
         {
             var joined = (string.Join(", ", this.Reviewers)).ToString();
             var outputResult = (field == "Reviewers") ? ($"Reviewers: {joined}") : string.Empty;
-            outputResult = field == "Description" ? $"Class description: {this.Description}" : outputResult;
+
+            outputResult = (field == "Description") ? ($"Class description: {this.Description}") : outputResult;
 
             if (outputResult == string.Empty)
             {
